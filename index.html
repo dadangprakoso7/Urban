@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kopi Mobile - Sistem Manajemen</title>
+    <style>
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2691E;
+            --light: #F5F5DC;
+            --dark: #3E2723;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: var(--secondary);
+        }
+        
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 140px);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: black;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .product-badge {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .badge-white { background-color: white; border: 1px solid #ccc; }
+        .badge-red { background-color: #dc3545; }
+        .badge-yellow { background-color: #ffc107; }
+        .badge-green { background-color: #28a745; }
+        .badge-blue { background-color: #17a2b8; }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        
+        .shift-status {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .sales-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .product-card.best-seller {
+            border-color: var(--warning);
+            position: relative;
+        }
+        
+        .product-card.best-seller::before {
+            content: "👑";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--warning);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .addons-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .payment-btn {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-btn.active {
+            border-color: var(--primary);
+            background-color: rgba(139, 69, 19, 0.1);
+        }
+        
+        .hourly-sales {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        .hour-card {
+            min-width: 120px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            .sales-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Kopi Mobile Management</div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-section="stocks">Stocks</a></li>
+                        <li><a href="#" class="nav-link" data-section="incomes">Incomes</a></li>
+                        <li><a href="#" class="nav-link" data-section="expenses">Expenses</a></li>
+                        <li><a href="#" class="nav-link" data-section="sellings">Sellings</a></li>
+                        <li><a href="#" class="nav-link" data-section="waste">Waste</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Dashboard</h2>
+                        <div id="shift-info">
+                            <span id="current-shift">Shift belum dibuka</span>
+                            <button class="btn btn-primary" id="open-shift-btn">Buka Shift</button>
+                        </div>
+                    </div>
+                    
+                    <div class="shift-status">
+                        <div class="status-indicator">
+                            <span class="product-badge badge-white"></span> <span>Shift 9 Jam</span>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="product-badge badge-red"></span> <span>Sisa Shift Pagi</span>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="product-badge badge-yellow"></span> <span>Sisa Shift Siang</span>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="product-badge badge-green"></span> <span>Baru Shift Pagi</span>
+                        </div>
+                        <div class="status-indicator">
+                            <span class="product-badge badge-blue"></span> <span>Baru Shift Siang</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sales-summary">
+                        <h3>Ringkasan Penjualan Hari Ini</h3>
+                        <div class="hourly-sales" id="hourly-sales">
+                            <!-- Hourly sales will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <h3>Aksi Cepat</h3>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button class="btn btn-primary" id="quick-sell">Jual Produk</button>
+                            <button class="btn btn-warning" id="quick-stock">Kelola Stok</button>
+                            <button class="btn btn-danger" id="quick-waste">Catat Waste</button>
+                            <button class="btn btn-success" id="quick-close">Tutup Shift</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stocks Section -->
+            <section id="stocks" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Manajemen Stok</h2>
+                        <button class="btn btn-primary" id="add-stock-btn">Tambah Stok</button>
+                    </div>
+                    
+                    <table id="stock-table">
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>Kategori</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Stock data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Incomes Section -->
+            <section id="incomes" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Pendapatan</h2>
+                    </div>
+                    
+                    <div class="income-summary">
+                        <h3>Total Pendapatan Hari Ini</h3>
+                        <div style="display: flex; gap: 2rem; margin-top: 1rem;">
+                            <div style="flex: 1; text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                                <h4>QRIS</h4>
+                                <p id="qris-income">Rp 0</p>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                                <h4>Tunai</h4>
+                                <p id="cash-income">Rp 0</p>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                                <h4>Total</h4>
+                                <p id="total-income">Rp 0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <table id="income-table" style="margin-top: 2rem;">
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                                <th>Harga</th>
+                                <th>Total</th>
+                                <th>Pembayaran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Income data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Expenses Section -->
+            <section id="expenses" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Pengeluaran</h2>
+                        <button class="btn btn-primary" id="add-expense-btn">Tambah Pengeluaran</button>
+                    </div>
+                    
+                    <table id="expense-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Expense data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sellings Section -->
+            <section id="sellings" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Penjualan</h2>
+                    </div>
+                    
+                    <div class="sales-grid" id="products-grid">
+                        <!-- Products will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="addons-section">
+                        <h3>Add-ons</h3>
+                        <div class="sales-grid" id="addons-grid">
+                            <!-- Add-ons will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="current-order" style="margin-top: 2rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <h3>Pesanan Saat Ini</h3>
+                        <div id="order-items">
+                            <!-- Order items will be populated by JavaScript -->
+                        </div>
+                        <div class="payment-methods">
+                            <div class="payment-btn" data-method="qris">QRIS</div>
+                            <div class="payment-btn" data-method="cash">Tunai</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                            <div>
+                                <strong>Total: <span id="order-total">Rp 0</span></strong>
+                            </div>
+                            <button class="btn btn-success" id="complete-order">Selesaikan Pesanan</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Waste Section -->
+            <section id="waste" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Waste / Expired / Bad Product</h2>
+                        <button class="btn btn-primary" id="add-waste-btn">Tambah Waste</button>
+                    </div>
+                    
+                    <table id="waste-table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                                <th>Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Waste data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="open-shift-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Buka Shift Baru</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="open-shift-form">
+                <div class="form-group">
+                    <label for="shift-name">Nama</label>
+                    <select id="shift-name" required>
+                        <option value="Dadang">Dadang</option>
+                        <option value="Budi">Budi</option>
+                        <option value="Sari">Sari</option>
+                        <option value="Rina">Rina</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shift-date">Tanggal Shift</label>
+                    <input type="date" id="shift-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="shift-type">Jenis Shift</label>
+                    <select id="shift-type" required>
+                        <option value="pagi">Pagi (06:00 ~ 13:00)</option>
+                        <option value="siang">Siang (13:00 ~ 20:00)</option>
+                        <option value="9jam">9 Jam (06:00 ~ 15:00)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shift-branch">Cabang</label>
+                    <select id="shift-branch" required>
+                        <option value="PST">Pusat (PST)</option>
+                        <option value="RKT">Rungkut (RKT)</option>
+                        <option value="MNK">Manukan (MNK)</option>
+                        <option value="RJW">Rajawali (RJW)</option>
+                        <option value="BNY">Banyuurip (BNY)</option>
+                        <option value="TBK">Tambak Rejo (TBK)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shift-vehicle">Armada</label>
+                    <select id="shift-vehicle" required>
+                        <!-- Options will be populated by JavaScript based on branch -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="initial-cash">Modal Awal</label>
+                    <input type="number" id="initial-cash" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Buka Shift</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Stock Modal -->
+    <div id="add-stock-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Stok</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="add-stock-form">
+                <div class="form-group">
+                    <label for="stock-product">Produk</label>
+                    <select id="stock-product" required>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stock-category">Kategori</label>
+                    <select id="stock-category" required>
+                        <option value="new">Baru</option>
+                        <option value="leftover">Sisa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stock-quantity">Jumlah</label>
+                    <input type="number" id="stock-quantity" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Tambah Stok</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div id="add-expense-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Pengeluaran</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="add-expense-form">
+                <div class="form-group">
+                    <label for="expense-description">Keterangan</label>
+                    <input type="text" id="expense-description" required>
+                </div>
+                <div class="form-group">
+                    <label for="expense-amount">Jumlah</label>
+                    <input type="number" id="expense-amount" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Tambah Pengeluaran</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Waste Modal -->
+    <div id="add-waste-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Waste</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="add-waste-form">
+                <div class="form-group">
+                    <label for="waste-product">Produk</label>
+                    <select id="waste-product" required>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="waste-quantity">Jumlah</label>
+                    <input type="number" id="waste-quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="waste-reason">Alasan</label>
+                    <input type="text" id="waste-reason" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Tambah Waste</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Close Shift Modal -->
+    <div id="close-shift-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tutup Shift</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div id="close-shift-summary">
+                <!-- Summary will be populated by JavaScript -->
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn btn-success" id="print-report">Cetak Laporan</button>
+                <button class="btn btn-danger" id="confirm-close">Tutup Shift</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Kopi Mobile Management System</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data structure
+        let appData = {
+            currentShift: null,
+            products: [
+                { id: 1, name: "Kopi Susu Gula Aren (KSA)", price: 10000, usp: "creamy, strong, bean robusta", bestSeller: false },
+                { id: 2, name: "Americano (AM)", price: 8000, usp: "strong, bean arabika tanpa gula", bestSeller: false },
+                { id: 3, name: "Creamy Latte (CL)", price: 8000, usp: "creamy, manis, bean 50% arabika 50% robusta", bestSeller: false },
+                { id: 4, name: "Butterscotch (BS)", price: 12000, usp: "creamy, gurih, asin, bean arabika, soft", bestSeller: true },
+                { id: 5, name: "Stevia Latte (SL)", price: 13000, usp: "creamy, tanpa gula/skm, rendah kalori, bean arabika gayo", bestSeller: true },
+                { id: 6, name: "Dark Chocolate (DC)", price: 12000, usp: "coklat premium, bitter sweat", bestSeller: true },
+                { id: 7, name: "Thai Tea (TT)", price: 15000, usp: "sweat tea dengan daun premium", bestSeller: false },
+                { id: 8, name: "Ori Matcha Latte (ML)", price: 10000, usp: "creamy, umami, matcha premium", bestSeller: false },
+                { id: 9, name: "Matcha Latte Stevia (MLS)", price: 10000, usp: "creamy, umami, matcha premium, rendah kalori", bestSeller: false }
+            ],
+            addons: [
+                { id: 1, name: "Extra Espresso Shot (ESP)", price: 3000 },
+                { id: 2, name: "Sea Salt Cream + Caramel Crumble (SC)", price: 3000 }
+            ],
+            branches: {
+                PST: ["PST 1", "PST 2", "PST 3", "PST 4", "PST 5", "PST 6", "PST 7", "PST 8", "PST 9", "PST 10", "PST 11", "PST 12", "PST 13"],
+                RKT: ["RKT 1", "RKT 2", "RKT 3", "RKT 4"],
+                MNK: ["MNK 1", "MNK 2"],
+                RJW: ["RJW 1", "RJW 2"],
+                BNY: ["BNY 1", "BNY 2", "BNY 3"],
+                TBK: ["TBK 1", "TBK 2", "TBK 3", "TBK 4"]
+            },
+            stock: [],
+            sales: [],
+            expenses: [],
+            waste: [],
+            currentOrder: {
+                items: [],
+                paymentMethod: null
+            }
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load data from localStorage if available
+            loadData();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Render initial data
+            renderDashboard();
+            renderStockTable();
+            renderIncomeTable();
+            renderExpenseTable();
+            renderProductsGrid();
+            renderAddonsGrid();
+            renderWasteTable();
+            
+            // Set today's date as default for shift date
+            document.getElementById('shift-date').valueAsDate = new Date();
+            
+            // Populate vehicle options based on branch
+            document.getElementById('shift-branch').addEventListener('change', function() {
+                populateVehicleOptions(this.value);
+            });
+            
+            // Initial population of vehicle options
+            populateVehicleOptions(document.getElementById('shift-branch').value);
+            
+            // Populate product options for stock and waste modals
+            populateProductOptions();
+        });
+
+        // Load data from localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('kopiMobileData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                appData = { ...appData, ...parsedData };
+                
+                // If there's an active shift, update the UI
+                if (appData.currentShift) {
+                    updateShiftInfo();
+                }
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('kopiMobileData', JSON.stringify(appData));
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+            
+            // Quick actions
+            document.getElementById('quick-sell').addEventListener('click', function() {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelector('[data-section="sellings"]').classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById('sellings').classList.add('active');
+            });
+            
+            document.getElementById('quick-stock').addEventListener('click', function() {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelector('[data-section="stocks"]').classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById('stocks').classList.add('active');
+            });
+            
+            document.getElementById('quick-waste').addEventListener('click', function() {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelector('[data-section="waste"]').classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById('waste').classList.add('active');
+            });
+            
+            document.getElementById('quick-close').addEventListener('click', function() {
+                if (appData.currentShift) {
+                    openCloseShiftModal();
+                } else {
+                    alert('Tidak ada shift yang aktif. Silakan buka shift terlebih dahulu.');
+                }
+            });
+            
+            // Open shift modal
+            document.getElementById('open-shift-btn').addEventListener('click', openShiftModal);
+            
+            // Close modals
+            document.querySelectorAll('.modal .close').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // Open shift form
+            document.getElementById('open-shift-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                openShift();
+            });
+            
+            // Add stock
+            document.getElementById('add-stock-btn').addEventListener('click', function() {
+                document.getElementById('add-stock-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('add-stock-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addStock();
+            });
+            
+            // Add expense
+            document.getElementById('add-expense-btn').addEventListener('click', function() {
+                document.getElementById('add-expense-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('add-expense-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addExpense();
+            });
+            
+            // Add waste
+            document.getElementById('add-waste-btn').addEventListener('click', function() {
+                document.getElementById('add-waste-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('add-waste-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addWaste();
+            });
+            
+            // Payment methods
+            document.querySelectorAll('.payment-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    appData.currentOrder.paymentMethod = this.getAttribute('data-method');
+                });
+            });
+            
+            // Complete order
+            document.getElementById('complete-order').addEventListener('click', completeOrder);
+            
+            // Close shift
+            document.getElementById('confirm-close').addEventListener('click', closeShift);
+            
+            // Print report
+            document.getElementById('print-report').addEventListener('click', printReport);
+        }
+
+        // Populate vehicle options based on branch
+        function populateVehicleOptions(branch) {
+            const vehicleSelect = document.getElementById('shift-vehicle');
+            vehicleSelect.innerHTML = '';
+            
+            if (appData.branches[branch]) {
+                appData.branches[branch].forEach(vehicle => {
+                    const option = document.createElement('option');
+                    option.value = vehicle;
+                    option.textContent = vehicle;
+                    vehicleSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Populate product options for modals
+        function populateProductOptions() {
+            const stockProductSelect = document.getElementById('stock-product');
+            const wasteProductSelect = document.getElementById('waste-product');
+            
+            stockProductSelect.innerHTML = '';
+            wasteProductSelect.innerHTML = '';
+            
+            // Add products
+            appData.products.forEach(product => {
+                const option1 = document.createElement('option');
+                option1.value = product.id;
+                option1.textContent = product.name;
+                stockProductSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = product.id;
+                option2.textContent = product.name;
+                wasteProductSelect.appendChild(option2);
+            });
+            
+            // Add addons
+            appData.addons.forEach(addon => {
+                const option1 = document.createElement('option');
+                option1.value = 'addon-' + addon.id;
+                option1.textContent = addon.name + ' (Add-on)';
+                stockProductSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = 'addon-' + addon.id;
+                option2.textContent = addon.name + ' (Add-on)';
+                wasteProductSelect.appendChild(option2);
+            });
+        }
+
+        // Open shift modal
+        function openShiftModal() {
+            document.getElementById('open-shift-modal').style.display = 'flex';
+        }
+
+        // Open shift
+        function openShift() {
+            const name = document.getElementById('shift-name').value;
+            const date = document.getElementById('shift-date').value;
+            const type = document.getElementById('shift-type').value;
+            const branch = document.getElementById('shift-branch').value;
+            const vehicle = document.getElementById('shift-vehicle').value;
+            const initialCash = parseInt(document.getElementById('initial-cash').value);
+            
+            appData.currentShift = {
+                name,
+                date,
+                type,
+                branch,
+                vehicle,
+                initialCash,
+                openTime: new Date().toISOString(),
+                sales: [],
+                expenses: [],
+                waste: [],
+                stock: []
+            };
+            
+            // Reset stock for new shift
+            appData.stock = [];
+            
+            // Close modal
+            document.getElementById('open-shift-modal').style.display = 'none';
+            
+            // Update UI
+            updateShiftInfo();
+            renderDashboard();
+            
+            // Save data
+            saveData();
+            
+            alert('Shift berhasil dibuka!');
+        }
+
+        // Update shift info on dashboard
+        function updateShiftInfo() {
+            if (appData.currentShift) {
+                const shiftInfo = document.getElementById('shift-info');
+                shiftInfo.innerHTML = `
+                    <span>Shift: ${appData.currentShift.name} - ${appData.currentShift.branch} - ${appData.currentShift.vehicle} - ${appData.currentShift.type}</span>
+                    <button class="btn btn-danger" id="close-shift-btn">Tutup Shift</button>
+                `;
+                
+                document.getElementById('close-shift-btn').addEventListener('click', openCloseShiftModal);
+            }
+        }
+
+        // Open close shift modal
+        function openCloseShiftModal() {
+            if (!appData.currentShift) return;
+            
+            // Calculate summary
+            const qrisIncome = appData.sales
+                .filter(sale => sale.paymentMethod === 'qris')
+                .reduce((total, sale) => total + sale.total, 0);
+                
+            const cashIncome = appData.sales
+                .filter(sale => sale.paymentMethod === 'cash')
+                .reduce((total, sale) => total + sale.total, 0);
+                
+            const totalExpenses = appData.expenses.reduce((total, expense) => total + expense.amount, 0);
+            
+            document.getElementById('close-shift-summary').innerHTML = `
+                <h4>Ringkasan Shift</h4>
+                <p><strong>Nama:</strong> ${appData.currentShift.name}</p>
+                <p><strong>Tanggal:</strong> ${appData.currentShift.date}</p>
+                <p><strong>Cabang:</strong> ${appData.currentShift.branch}</p>
+                <p><strong>Armada:</strong> ${appData.currentShift.vehicle}</p>
+                <p><strong>Shift:</strong> ${appData.currentShift.type}</p>
+                <p><strong>Pendapatan QRIS:</strong> Rp ${qrisIncome.toLocaleString('id-ID')}</p>
+                <p><strong>Pendapatan Tunai:</strong> Rp ${cashIncome.toLocaleString('id-ID')}</p>
+                <p><strong>Total Pengeluaran:</strong> Rp ${totalExpenses.toLocaleString('id-ID')}</p>
+                <p><strong>Modal Awal:</strong> Rp ${appData.currentShift.initialCash.toLocaleString('id-ID')}</p>
+                <p><strong>Saldo Akhir:</strong> Rp ${(appData.currentShift.initialCash + cashIncome - totalExpenses).toLocaleString('id-ID')}</p>
+            `;
+            
+            document.getElementById('close-shift-modal').style.display = 'flex';
+        }
+
+        // Close shift
+        function closeShift() {
+            if (!appData.currentShift) return;
+            
+            // Reset current shift
+            appData.currentShift = null;
+            
+            // Reset data for new shift
+            appData.sales = [];
+            appData.expenses = [];
+            appData.waste = [];
+            appData.stock = [];
+            
+            // Update UI
+            document.getElementById('shift-info').innerHTML = `
+                <span id="current-shift">Shift belum dibuka</span>
+                <button class="btn btn-primary" id="open-shift-btn">Buka Shift</button>
+            `;
+            
+            document.getElementById('open-shift-btn').addEventListener('click', openShiftModal);
+            
+            // Close modal
+            document.getElementById('close-shift-modal').style.display = 'none';
+            
+            // Render updated data
+            renderDashboard();
+            renderIncomeTable();
+            renderExpenseTable();
+            renderStockTable();
+            renderWasteTable();
+            
+            // Save data
+            saveData();
+            
+            alert('Shift berhasil ditutup!');
+        }
+
+        // Print report
+        function printReport() {
+            // In a real implementation, this would generate a PDF
+            // For this demo, we'll just show an alert
+            alert('Laporan akan dicetak ke PDF. (Fitur ini memerlukan implementasi server-side untuk generasi PDF)');
+        }
+
+        // Add stock
+        function addStock() {
+            const productId = document.getElementById('stock-product').value;
+            const category = document.getElementById('stock-category').value;
+            const quantity = parseInt(document.getElementById('stock-quantity').value);
+            
+            // Find if stock already exists for this product
+            const existingStockIndex = appData.stock.findIndex(item => item.id === productId);
+            
+            if (existingStockIndex !== -1) {
+                // Update existing stock
+                appData.stock[existingStockIndex].quantity += quantity;
+                if (category === 'new') {
+                    appData.stock[existingStockIndex].new += quantity;
+                } else {
+                    appData.stock[existingStockIndex].leftover += quantity;
+                }
+            } else {
+                // Add new stock
+                const isAddon = productId.startsWith('addon-');
+                const product = isAddon 
+                    ? appData.addons.find(a => 'addon-' + a.id === productId)
+                    : appData.products.find(p => p.id === parseInt(productId));
+                
+                if (!product) return;
+                
+                appData.stock.push({
+                    id: productId,
+                    name: product.name,
+                    quantity: quantity,
+                    new: category === 'new' ? quantity : 0,
+                    leftover: category === 'leftover' ? quantity : 0,
+                    isAddon: isAddon
+                });
+            }
+            
+            // Close modal
+            document.getElementById('add-stock-modal').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('add-stock-form').reset();
+            
+            // Update UI
+            renderStockTable();
+            
+            // Save data
+            saveData();
+            
+            alert('Stok berhasil ditambahkan!');
+        }
+
+        // Add expense
+        function addExpense() {
+            const description = document.getElementById('expense-description').value;
+            const amount = parseInt(document.getElementById('expense-amount').value);
+            
+            appData.expenses.push({
+                id: Date.now(),
+                date: new Date().toLocaleDateString('id-ID'),
+                description,
+                amount
+            });
+            
+            // Close modal
+            document.getElementById('add-expense-modal').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('add-expense-form').reset();
+            
+            // Update UI
+            renderExpenseTable();
+            
+            // Save data
+            saveData();
+            
+            alert('Pengeluaran berhasil dicatat!');
+        }
+
+        // Add waste
+        function addWaste() {
+            const productId = document.getElementById('waste-product').value;
+            const quantity = parseInt(document.getElementById('waste-quantity').value);
+            const reason = document.getElementById('waste-reason').value;
+            
+            // Find the product
+            const isAddon = productId.startsWith('addon-');
+            const product = isAddon 
+                ? appData.addons.find(a => 'addon-' + a.id === productId)
+                : appData.products.find(p => p.id === parseInt(productId));
+            
+            if (!product) return;
+            
+            // Check if we have enough stock
+            const stockItem = appData.stock.find(item => item.id === productId);
+            if (!stockItem || stockItem.quantity < quantity) {
+                alert('Stok tidak cukup untuk mencatat waste!');
+                return;
+            }
+            
+            // Reduce stock
+            stockItem.quantity -= quantity;
+            // Prefer to reduce leftover stock first
+            if (stockItem.leftover >= quantity) {
+                stockItem.leftover -= quantity;
+            } else {
+                const remaining = quantity - stockItem.leftover;
+                stockItem.leftover = 0;
+                stockItem.new -= remaining;
+            }
+            
+            // Add waste record
+            appData.waste.push({
+                id: Date.now(),
+                date: new Date().toLocaleDateString('id-ID'),
+                productId,
+                productName: product.name,
+                quantity,
+                reason
+            });
+            
+            // Close modal
+            document.getElementById('add-waste-modal').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('add-waste-form').reset();
+            
+            // Update UI
+            renderWasteTable();
+            renderStockTable();
+            
+            // Save data
+            saveData();
+            
+            alert('Waste berhasil dicatat!');
+        }
+
+        // Render dashboard
+        function renderDashboard() {
+            if (!appData.currentShift) {
+                document.getElementById('current-shift').textContent = 'Shift belum dibuka';
+                document.getElementById('hourly-sales').innerHTML = '<p>Belum ada data penjualan</p>';
+                return;
+            }
+            
+            // Update shift info
+            updateShiftInfo();
+            
+            // Calculate hourly sales
+            const hourlySales = {};
+            for (let i = 6; i <= 20; i++) {
+                hourlySales[i] = 0;
+            }
+            
+            appData.sales.forEach(sale => {
+                const hour = new Date(sale.timestamp).getHours();
+                hourlySales[hour] += sale.items.reduce((total, item) => total + item.quantity, 0);
+            });
+            
+            // Render hourly sales
+            const hourlySalesContainer = document.getElementById('hourly-sales');
+            hourlySalesContainer.innerHTML = '';
+            
+            for (let hour = 6; hour <= 20; hour++) {
+                const hourCard = document.createElement('div');
+                hourCard.className = 'hour-card';
+                hourCard.innerHTML = `
+                    <h4>${hour}:00</h4>
+                    <p>${hourlySales[hour]} cup</p>
+                `;
+                hourlySalesContainer.appendChild(hourCard);
+            }
+            
+            // Update income summary
+            const qrisIncome = appData.sales
+                .filter(sale => sale.paymentMethod === 'qris')
+                .reduce((total, sale) => total + sale.total, 0);
+                
+            const cashIncome = appData.sales
+                .filter(sale => sale.paymentMethod === 'cash')
+                .reduce((total, sale) => total + sale.total, 0);
+                
+            document.getElementById('qris-income').textContent = `Rp ${qrisIncome.toLocaleString('id-ID')}`;
+            document.getElementById('cash-income').textContent = `Rp ${cashIncome.toLocaleString('id-ID')}`;
+            document.getElementById('total-income').textContent = `Rp ${(qrisIncome + cashIncome).toLocaleString('id-ID')}`;
+        }
+
+        // Render stock table
+        function renderStockTable() {
+            const tbody = document.querySelector('#stock-table tbody');
+            tbody.innerHTML = '';
+            
+            if (appData.stock.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Tidak ada stok</td></tr>';
+                return;
+            }
+            
+            appData.stock.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Determine category badge
+                let badge = '';
+                if (item.leftover > 0) {
+                    if (item.isAddon) {
+                        badge = '<span class="product-badge badge-yellow"></span>';
+                    } else {
+                        // For products, we need to determine which shift's leftover
+                        // This is a simplified version - in a real app, you'd track this more precisely
+                        badge = '<span class="product-badge badge-red"></span>';
+                    }
+                } else if (item.new > 0) {
+                    badge = '<span class="product-badge badge-green"></span>';
+                }
+                
+                row.innerHTML = `
+                    <td>${badge} ${item.name}</td>
+                    <td>${item.isAddon ? 'Add-on' : 'Produk'}</td>
+                    <td>${item.quantity}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm edit-stock" data-id="${item.id}">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-stock" data-id="${item.id}">Hapus</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners for edit and delete buttons
+            document.querySelectorAll('.edit-stock').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    editStock(id);
+                });
+            });
+            
+            document.querySelectorAll('.delete-stock').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    deleteStock(id);
+                });
+            });
+        }
+
+        // Edit stock (simplified - just prompt for new quantity)
+        function editStock(id) {
+            const item = appData.stock.find(i => i.id === id);
+            if (!item) return;
+            
+            const newQuantity = prompt(`Edit jumlah stok untuk ${item.name}:`, item.quantity);
+            if (newQuantity !== null && !isNaN(newQuantity) && parseInt(newQuantity) >= 0) {
+                item.quantity = parseInt(newQuantity);
+                // For simplicity, we'll just adjust the "new" quantity
+                // In a real app, you'd want more sophisticated logic
+                if (item.quantity < item.new) {
+                    item.new = item.quantity;
+                    item.leftover = 0;
+                } else {
+                    item.leftover = item.quantity - item.new;
+                }
+                
+                renderStockTable();
+                saveData();
+            }
+        }
+
+        // Delete stock
+        function deleteStock(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus stok ini?')) {
+                appData.stock = appData.stock.filter(i => i.id !== id);
+                renderStockTable();
+                saveData();
+            }
+        }
+
+        // Render income table
+        function renderIncomeTable() {
+            const tbody = document.querySelector('#income-table tbody');
+            tbody.innerHTML = '';
+            
+            if (appData.sales.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Tidak ada data penjualan</td></tr>';
+                return;
+            }
+            
+            appData.sales.forEach(sale => {
+                sale.items.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    if (index === 0) {
+                        row.innerHTML = `
+                            <td rowspan="${sale.items.length}">${new Date(sale.timestamp).toLocaleString('id-ID')}</td>
+                            <td>${item.name}</td>
+                            <td>${item.quantity}</td>
+                            <td>Rp ${item.price.toLocaleString('id-ID')}</td>
+                            <td>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</td>
+                            <td rowspan="${sale.items.length}">${sale.paymentMethod === 'qris' ? 'QRIS' : 'Tunai'}</td>
+                        `;
+                    } else {
+                        row.innerHTML = `
+                            <td>${item.name}</td>
+                            <td>${item.quantity}</td>
+                            <td>Rp ${item.price.toLocaleString('id-ID')}</td>
+                            <td>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</td>
+                        `;
+                    }
+                    tbody.appendChild(row);
+                });
+            });
+            
+            // Update income summary
+            const qrisIncome = appData.sales
+                .filter(sale => sale.paymentMethod === 'qris')
+                .reduce((total, sale) => total + sale.total, 0);
+                
+            const cashIncome = appData.sales
+                .filter(sale => sale.paymentMethod === 'cash')
+                .reduce((total, sale) => total + sale.total, 0);
+                
+            document.getElementById('qris-income').textContent = `Rp ${qrisIncome.toLocaleString('id-ID')}`;
+            document.getElementById('cash-income').textContent = `Rp ${cashIncome.toLocaleString('id-ID')}`;
+            document.getElementById('total-income').textContent = `Rp ${(qrisIncome + cashIncome).toLocaleString('id-ID')}`;
+        }
+
+        // Render expense table
+        function renderExpenseTable() {
+            const tbody = document.querySelector('#expense-table tbody');
+            tbody.innerHTML = '';
+            
+            if (appData.expenses.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Tidak ada data pengeluaran</td></tr>';
+                return;
+            }
+            
+            appData.expenses.forEach(expense => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.date}</td>
+                    <td>${expense.description}</td>
+                    <td>Rp ${expense.amount.toLocaleString('id-ID')}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-expense" data-id="${expense.id}">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-expense').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteExpense(id);
+                });
+            });
+        }
+
+        // Delete expense
+        function deleteExpense(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus pengeluaran ini?')) {
+                appData.expenses = appData.expenses.filter(e => e.id !== id);
+                renderExpenseTable();
+                saveData();
+            }
+        }
+
+        // Render products grid
+        function renderProductsGrid() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            
+            appData.products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = `product-card ${product.bestSeller ? 'best-seller' : ''}`;
+                card.setAttribute('data-id', product.id);
+                card.setAttribute('data-type', 'product');
+                card.innerHTML = `
+                    <h4>${product.name}</h4>
+                    <p>${product.usp}</p>
+                    <p><strong>Rp ${product.price.toLocaleString('id-ID')}</strong></p>
+                `;
+                
+                card.addEventListener('click', function() {
+                    addToOrder(product.id, 'product');
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Render addons grid
+        function renderAddonsGrid() {
+            const grid = document.getElementById('addons-grid');
+            grid.innerHTML = '';
+            
+            appData.addons.forEach(addon => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.setAttribute('data-id', addon.id);
+                card.setAttribute('data-type', 'addon');
+                card.innerHTML = `
+                    <h4>${addon.name}</h4>
+                    <p><strong>Rp ${addon.price.toLocaleString('id-ID')}</strong></p>
+                `;
+                
+                card.addEventListener('click', function() {
+                    addToOrder(addon.id, 'addon');
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Add item to order
+        function addToOrder(id, type) {
+            let item;
+            if (type === 'product') {
+                item = appData.products.find(p => p.id === id);
+            } else {
+                item = appData.addons.find(a => a.id === id);
+            }
+            
+            if (!item) return;
+            
+            // Check if item is already in order
+            const existingItem = appData.currentOrder.items.find(i => i.id === id && i.type === type);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                appData.currentOrder.items.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: 1,
+                    type: type
+                });
+            }
+            
+            renderOrder();
+        }
+
+        // Render current order
+        function renderOrder() {
+            const orderItems = document.getElementById('order-items');
+            orderItems.innerHTML = '';
+            
+            if (appData.currentOrder.items.length === 0) {
+                orderItems.innerHTML = '<p>Belum ada item dalam pesanan</p>';
+                document.getElementById('order-total').textContent = 'Rp 0';
+                return;
+            }
+            
+            let total = 0;
+            
+            appData.currentOrder.items.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.style.display = 'flex';
+                itemDiv.style.justifyContent = 'space-between';
+                itemDiv.style.marginBottom = '0.5rem';
+                itemDiv.style.paddingBottom = '0.5rem';
+                itemDiv.style.borderBottom = '1px solid #eee';
+                
+                itemDiv.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <br>
+                        <small>Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}</small>
+                    </div>
+                    <div>
+                        <strong>Rp ${itemTotal.toLocaleString('id-ID')}</strong>
+                        <br>
+                        <button class="btn btn-sm btn-danger remove-item" data-index="${index}">Hapus</button>
+                    </div>
+                `;
+                
+                orderItems.appendChild(itemDiv);
+            });
+            
+            document.getElementById('order-total').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            
+            // Add event listeners for remove buttons
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeFromOrder(index);
+                });
+            });
+        }
+
+        // Remove item from order
+        function removeFromOrder(index) {
+            appData.currentOrder.items.splice(index, 1);
+            renderOrder();
+        }
+
+        // Complete order
+        function completeOrder() {
+            if (appData.currentOrder.items.length === 0) {
+                alert('Tidak ada item dalam pesanan!');
+                return;
+            }
+            
+            if (!appData.currentOrder.paymentMethod) {
+                alert('Pilih metode pembayaran terlebih dahulu!');
+                return;
+            }
+            
+            // Check stock availability
+            for (const item of appData.currentOrder.items) {
+                const stockItem = appData.stock.find(s => 
+                    (item.type === 'product' && s.id === item.id.toString()) ||
+                    (item.type === 'addon' && s.id === 'addon-' + item.id)
+                );
+                
+                if (!stockItem || stockItem.quantity < item.quantity) {
+                    alert(`Stok tidak cukup untuk ${item.name}!`);
+                    return;
+                }
+            }
+            
+            // Deduct stock
+            for (const item of appData.currentOrder.items) {
+                const stockItem = appData.stock.find(s => 
+                    (item.type === 'product' && s.id === item.id.toString()) ||
+                    (item.type === 'addon' && s.id === 'addon-' + item.id)
+                );
+                
+                if (stockItem) {
+                    stockItem.quantity -= item.quantity;
+                    // Prefer to reduce leftover stock first
+                    if (stockItem.leftover >= item.quantity) {
+                        stockItem.leftover -= item.quantity;
+                    } else {
+                        const remaining = item.quantity - stockItem.leftover;
+                        stockItem.leftover = 0;
+                        stockItem.new -= remaining;
+                    }
+                }
+            }
+            
+            // Calculate total
+            const total = appData.currentOrder.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Record sale
+            appData.sales.push({
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                items: [...appData.currentOrder.items],
+                total: total,
+                paymentMethod: appData.currentOrder.paymentMethod
+            });
+            
+            // Reset current order
+            appData.currentOrder = {
+                items: [],
+                paymentMethod: null
+            };
+            
+            // Reset payment method UI
+            document.querySelectorAll('.payment-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Update UI
+            renderOrder();
+            renderStockTable();
+            renderIncomeTable();
+            renderDashboard();
+            
+            // Save data
+            saveData();
+            
+            alert('Pesanan berhasil diselesaikan!');
+        }
+
+        // Render waste table
+        function renderWasteTable() {
+            const tbody = document.querySelector('#waste-table tbody');
+            tbody.innerHTML = '';
+            
+            if (appData.waste.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Tidak ada data waste</td></tr>';
+                return;
+            }
+            
+            appData.waste.forEach(waste => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${waste.date}</td>
+                    <td>${waste.productName}</td>
+                    <td>${waste.quantity}</td>
+                    <td>${waste.reason}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-waste" data-id="${waste.id}">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-waste').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteWaste(id);
+                });
+            });
+        }
+
+        // Delete waste record
+        function deleteWaste(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus record waste ini?')) {
+                const waste = appData.waste.find(w => w.id === id);
+                if (waste) {
+                    // Restore stock
+                    const stockItem = appData.stock.find(s => s.id === waste.productId);
+                    if (stockItem) {
+                        stockItem.quantity += waste.quantity;
+                        // For simplicity, we'll add it as leftover
+                        stockItem.leftover += waste.quantity;
+                    }
+                }
+                
+                appData.waste = appData.waste.filter(w => w.id !== id);
+                renderWasteTable();
+                renderStockTable();
+                saveData();
+            }
+        }
+    </script>
+</body>
+</html>
